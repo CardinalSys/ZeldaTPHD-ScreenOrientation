@@ -2,6 +2,7 @@
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 Mem mem = new Mem();
 
@@ -35,7 +36,9 @@ void GetBaseAddress()
     using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
     using (var sr = new StreamReader(fs, Encoding.Default))
     {
-        baseAddress = "0x" + sr.ReadToEnd().Split("\n")[1].Split("base:")[1].Substring(3).TrimStart('0').Replace(")", "");
+        string pattern = @"base:\s*0x([0-9a-fA-F]+)";
+        Match match = Regex.Match(sr.ReadToEnd(), pattern);
+        baseAddress = "0x" + match.Groups[1].Value.TrimStart('0');
     }
 
     Console.WriteLine("Base address: " + baseAddress);
@@ -47,10 +50,11 @@ void ChangeScreenOrientation()
 {
     long fullAddress = Convert.ToInt64(baseAddress.Trim(), 16) + Convert.ToInt64(ScreenOrientationOffset.Trim(), 16);
     string hexfullAddress = "0x" + fullAddress.ToString("X");
+
     Console.WriteLine("Screen Orientation address: " + hexfullAddress);
     mem.WriteMemory(hexfullAddress, "byte", "0");
-    Console.WriteLine("Screen Orientation successfully changed to Wii mode" + "\n");
 
+    Console.WriteLine("Screen Orientation successfully changed to Wii mode" + "\n");
     Console.WriteLine("Click any button to close this windows");
     Console.ReadKey();
     Environment.Exit(0);
