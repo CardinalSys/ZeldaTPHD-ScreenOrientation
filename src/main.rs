@@ -66,17 +66,17 @@ fn get_base_address(path: &str) -> usize {
 fn change_screen_orientation(base_address: usize, process: Rc<Process>){
     let address = base_address + 0x1012667D;
     let current_orientation: u32 = process.read_value(address, true);
-    let mut newOrientation = 0; 
+    let mut new_orientation = 0; 
     if current_orientation == 0{
         print!("Changing orientation to GameCube/WiiU mode");
-        newOrientation = 1;
+        new_orientation = 1;
     }
     else if current_orientation == 1{
         print!("Changing orientation to Wii mode");
-        newOrientation = 0;
+        new_orientation = 0;
     }
 
-    process.write_value(address, newOrientation, true);
+    process.write_value(address, new_orientation, true);
     
 }
 
