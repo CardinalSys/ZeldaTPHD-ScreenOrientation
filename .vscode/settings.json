@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "proc.h": "c",
+        "psapi.h": "c",
+        "windows.h": "c"
+    }
+}
